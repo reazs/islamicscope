@@ -1,6 +1,7 @@
 import { alQuranArabic, quranChapters } from "@/constant";
 import ClientPage from "./ClientPage";
-import { ISurah } from "@/types";
+import { IAyahs, ISurah } from "@/types";
+import { fetchAlQuranEnAr } from "./actions";
 
 const fetchChapterData = async (chapterNumber: number) => {
   const currentChapter: ISurah = quranChapters[chapterNumber - 1] as ISurah;
@@ -18,15 +19,25 @@ interface PageProps {
 const Page = async ({ params }: PageProps) => {
   const chapter = params.chapterName.split("%3D")[1];
   const chapterNumber = parseInt(chapter, 10);
-  const { currentChapter, currentArabicChapter } = await fetchChapterData(
-    chapterNumber
-  );
+
+  const {
+    prevChapterName,
+    chapterAyahsArabic,
+    chapterAyahsEnglish,
+    nextChapterName,
+    totalAyahs,
+    currentChapterName,
+  } = await fetchAlQuranEnAr({ page: 1, chapterNumber });
 
   return (
     <ClientPage
       chapterNumber={chapterNumber}
-      currentChapter={currentChapter}
-      currentArabicChapter={currentArabicChapter}
+      currentChapter={chapterAyahsEnglish}
+      currentArabicChapter={chapterAyahsArabic}
+      prevChapterName={prevChapterName}
+      nextChapterName={nextChapterName}
+      totalAyahsLength={totalAyahs}
+      currentChapterName={currentChapterName}
     />
   );
 };

@@ -11,6 +11,10 @@ const CurrentChapterText = ({
   indexOfFirstItem,
   currentItemsArabic,
 }: CurrentChapterTextProp) => {
+  // Ensure currentItems is an array
+  if (!Array.isArray(currentItems)) {
+    return null;
+  }
   return (
     <>
       {currentItems.map((ayah, index) => (

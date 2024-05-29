@@ -1,9 +1,13 @@
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
+import Link from "next/link";
 
-const DashboardLinkCard = ({ Icon, label, herf, bgColor, color }: any) => {
+const DashboardLinkCard = ({ Icon, label, href, bgColor, color }: any) => {
   return (
-    <div className="flex mb-5 group  border cursor-pointer hover:bg-primary-content hover:text-primary-foreground  border-primary rounded-sm p-3 flex-row justify-between items-center w-full md:max-w-screen-md">
+    <Link
+      className="flex flex-row justify-between items-center mb-5 group  border cursor-pointer hover:bg-primary-content hover:text-primary-foreground  border-primary rounded-sm p-3  w-full md:max-w-screen-md "
+      href={href}
+    >
       <div className=" flex items-center gap-2">
         <div
           className={cn(
@@ -16,7 +20,7 @@ const DashboardLinkCard = ({ Icon, label, herf, bgColor, color }: any) => {
         <p>{label}</p>
       </div>
       <ChevronRight />
-    </div>
+    </Link>
   );
 };
 

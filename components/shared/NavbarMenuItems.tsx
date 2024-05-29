@@ -12,7 +12,7 @@ const NavbarMenuItems = () => {
         <>
           {
             <li>
-              <a>
+              <a href={menu.herf}>
                 {menu.icon}
                 {menu.label}
               </a>

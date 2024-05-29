@@ -1,7 +1,7 @@
 "use client";
 import quranEnlish from "@/lib/models/en_edition";
 import { ISurah, ISurahs } from "@/types";
-import alquranIllustration from "@/assets/images/flat-ramadan-illustration.png";
+import alquranIllustration from "@/assets/images/alQuran-illustration.png";
 import ChapterCardTile from "@/components/CardTile/ChapterCardTile";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -25,7 +25,7 @@ const Page = () => {
       </h1>
       <Image
         alt="illustration-image"
-        className="mx-auto h-[300px] w-[300px]"
+        className="mx-auto h-[350px] w-[350px]  md:mt-5"
         src={alquranIllustration}
       />
       <div className="grid md:grid-cols-2 p-2 ">

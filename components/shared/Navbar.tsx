@@ -5,8 +5,8 @@ import NavbarMenuItems from "./NavbarMenuItems";
 
 const Navbar = () => {
   return (
-    <div className="md:hidden inline-block  w-full ">
-      <div className="navbar  fixed top-0 left-0 w-full z-50 border-b border-zinc-400">
+    <div className="md:hidden inline-block  w-full  ">
+      <div className="navbar  fixed top-0 left-0 w-full z-50 border-b bg-white bg-opacity-[0.8] border-zinc-400">
         <div className="navbar-start">
           <div className="dropdown">
             <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">

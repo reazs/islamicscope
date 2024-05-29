@@ -10,7 +10,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <div className="w-full h-full">
         <Navbar />
         <div className="w-full md:pl-64  h-full">
-          <div className="p-5">{children}</div>
+          <div className="p-5 ">{children}</div>
         </div>
       </div>
     </div>

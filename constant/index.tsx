@@ -1,7 +1,7 @@
 import ALQURAN from "@/lib/models/en_edition";
 import { ISurahs } from "@/types";
 import { Book, BookCopy, Home, LayoutDashboard, Search } from "lucide-react";
-
+import { AlQuranArabic } from "@/lib/models/al_quran_editions/ar_edition";
 export const menuItemsSidebar = [
   {
     label: "Dashboard",
@@ -26,5 +26,7 @@ export const menuItemsSidebar = [
   },
 ];
 
+const alQuranArabicData = AlQuranArabic.data as any;
 const data = ALQURAN.data as any;
 export const quranChapters: ISurahs = data.surahs;
+export const alQuranArabic: ISurahs = alQuranArabicData.surahs;

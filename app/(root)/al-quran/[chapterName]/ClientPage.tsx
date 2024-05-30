@@ -9,7 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import CurrentChapterText from "./CurrentChapterText";
 import { useInView } from "react-intersection-observer";
-import { fetchAlQuranEnAr } from "./actions";
+import { fetchAlQuranEnAr } from "@/lib/actions/actionAlQuran";
 
 interface ClientPageProps {
   chapterNumber: number;
@@ -104,7 +104,7 @@ const ClientPage: React.FC<ClientPageProps> = ({
         />
         {/* Display loading spinner if there are more ayahs to load */}
         {hasMore && (
-          <div className="flex justify-center">
+          <div className="flex justify-center my-10">
             <span ref={ref} className="loading loading-ring loading-lg"></span>
           </div>
         )}

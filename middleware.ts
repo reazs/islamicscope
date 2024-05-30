@@ -7,6 +7,8 @@ export default authMiddleware({
     "/explore",
     "/al-quran(.*)",
     "/hadiths(.*)",
+    "/hadiths/chapters/(.*)",
+    "/hadiths/chapters/(.*)/details/(.*)",
     "/dashboard",
   ],
 });

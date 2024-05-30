@@ -1,8 +1,8 @@
-export interface hadithBookNameProp {
+export type  IhadithBookNames =  {
   Book_ID: number;
   Book_Name: string;
 }
-export const hadithBookName: hadithBookNameProp[] = [
+export const hadithBookName: IhadithBookNames[] = [
   {
     Book_ID: 1,
     Book_Name: "1.  The Book of Miscellany",

@@ -6,6 +6,7 @@ import ChapterCardTile from "@/components/CardTile/ChapterCardTile";
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
+import MediumHeading from "@/components/shared/MediumHeading";
 const Page = () => {
   const quranEn = quranEnlish.data as any;
   const quranChapters: ISurahs = quranEn.surahs as any;
@@ -19,10 +20,8 @@ const Page = () => {
   ) as any;
   const totalPage = Math.ceil(quranChapters.length / itemsPerPage);
   return (
-    <div className=" md:max-w-screen-md w-full mx-auto mt-16">
-      <h1 className="scroll-m-20 text-4xl font-semibold tracking-tight lg:text-5xl text-center">
-        Al Quran
-      </h1>
+    <div className=" md:max-w-screen-md w-full mx-auto ">
+      <MediumHeading>Al Quran</MediumHeading>
       <Image
         alt="illustration-image"
         className="mx-auto h-[350px] w-[350px]  md:mt-5"

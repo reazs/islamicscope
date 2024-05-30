@@ -1,15 +1,6 @@
-import { alQuranArabic, quranChapters } from "@/constant";
 import ClientPage from "./ClientPage";
-import { IAyahs, ISurah } from "@/types";
-import { fetchAlQuranEnAr } from "./actions";
+import { fetchAlQuranEnAr } from "@/lib/actions/actionAlQuran";
 
-const fetchChapterData = async (chapterNumber: number) => {
-  const currentChapter: ISurah = quranChapters[chapterNumber - 1] as ISurah;
-  const currentArabicChapter: ISurah = alQuranArabic[
-    chapterNumber - 1
-  ] as ISurah;
-  return { currentChapter, currentArabicChapter };
-};
 interface PageProps {
   params: {
     chapterName: string;

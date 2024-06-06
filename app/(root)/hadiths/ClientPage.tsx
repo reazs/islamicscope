@@ -58,12 +58,13 @@ const ClientPage: React.FC<ClientPageProp> = ({ hadithBookNames }) => {
         alt="hadith-logo-img"
         className="rounded-full mx-auto"
       />
+
       {chapters.map((chapter, index) => (
         <Link
           key={chapter.chapter_id + index}
           href={"/hadiths/chapters/" + chapter.chapter_id}
         >
-          <div className="p-4 max-w-screen-lg mx-auto border border-primary my-2 rounded-md cursor-pointer group hover:bg-primary">
+          <div className=" border border-primary p-4 max-w-screen-lg mx-auto  my-2 rounded-md cursor-pointer group hover:bg-primary">
             {chapter.chapter_title === "" ? (
               <p className="group-hover:text-primary-foreground">
                 {index + 1}. Chapter Title Missing

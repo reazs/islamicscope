@@ -23,8 +23,7 @@ export interface ISurah {
 export type ISurahs = ISurah[];
 
 export type IUser = {
-  id: string;
-  name: string;
+  _id: string;
   username: string;
   email: string;
   imageUrl: string;
@@ -32,10 +31,25 @@ export type IUser = {
 };
 export type INewUser = {
   id: string;
-  name: string;
   username: string;
   email: string;
   imageUrl: string;
   bio: string;
   password: string;
+};
+
+export type ICreateThread = {
+  email: string;
+  title: string;
+  content: string;
+};
+
+export type IThread = {
+  _id: string;
+  user: IUser;
+  title: string;
+  content: string;
+  createdAt: string;
+  likes?: IUser[];
+  comments?: [];
 };

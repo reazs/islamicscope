@@ -110,3 +110,68 @@ export const fetchHadithById = async (
     throw new Error("Failed to get hadith by id");
   }
 };
+
+export const getNextHadithId = async ({
+  hadithId,
+  chapterId,
+}: {
+  hadithId: number;
+  chapterId: number;
+}): Promise<number | null> => {
+  try {
+    const chapterCollections = hadiths.filter(
+      (hadith) => hadith.Chapter_ID === chapterId
+    );
+    const hadithIndex = chapterCollections.findIndex(
+      (hadith) => hadith.Hadith_ID === hadithId
+    );
+    if (hadithIndex < chapterCollections.length - 1) {
+      const nextHadithId = chapterCollections[hadithIndex + 1].Hadith_ID;
+      return nextHadithId;
+    }
+    return null;
+  } catch (error) {
+    console.log("Failed to get next hadith by id", error);
+    throw new Error("Failed to get next hadith by id");
+  }
+};
+
+export const getPrevHadithId = async ({
+  hadithId,
+  chapterId,
+}: {
+  hadithId: number;
+  chapterId: number;
+}): Promise<number | null> => {
+  try {
+    const chapterCollections = hadiths.filter(
+      (hadith) => hadith.Chapter_ID === chapterId
+    );
+    const hadithIndex = chapterCollections.findIndex(
+      (hadith) => hadith.Hadith_ID === hadithId
+    );
+    if (hadithIndex > 0) {
+      const nextHadithId = chapterCollections[hadithIndex - 1].Hadith_ID;
+      return nextHadithId;
+    }
+    return null;
+  } catch (error) {
+    console.log("Failed to get next hadith by id", error);
+    throw new Error("Failed to get next hadith by id");
+  }
+};
+
+export const fetchHadithBySearch = async (searchQuery: string) => {
+  try {
+    const searchKey = searchQuery.toLowerCase();
+    const searchHadiths = hadiths.filter(
+      (hadith) =>
+        hadith.En_Text.toLowerCase().includes(searchKey) ||
+        hadith.En_Sanad.toLowerCase().includes(searchKey)
+    );
+    return searchHadiths;
+  } catch (error) {
+    console.log("Failed to get hadith by search keys", error);
+    throw new Error("Failed to get hadith by search keys");
+  }
+};

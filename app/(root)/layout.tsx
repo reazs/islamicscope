@@ -1,5 +1,6 @@
 import Navbar from "@/components/shared/Navbar";
 import Sidebar from "@/components/shared/Sidebar";
+import ReactQueryProvider from "@/lib/react-query/ReactQueryProvider";
 import React from "react";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
@@ -10,7 +11,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <div className="w-full h-full">
         <Navbar />
         <div className="w-full md:pl-64  h-full">
-          <div className="p-5 ">{children}</div>
+          <ReactQueryProvider>
+            <div className="p-5 ">{children}</div>
+          </ReactQueryProvider>
         </div>
       </div>
     </div>

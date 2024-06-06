@@ -1,9 +1,15 @@
 "use client";
 import MediumHeading from "@/components/shared/MediumHeading";
-import { fetchHadithsByChapterId } from "@/lib/actions/actionHadiths";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  fetchHadithBySearch,
+  fetchHadithsByChapterId,
+} from "@/lib/actions/actionHadiths";
 import { HadithProp } from "@/lib/models/hadiths";
+import { Search } from "lucide-react";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 interface ClientPageProps {
@@ -11,12 +17,29 @@ interface ClientPageProps {
   hadiths: HadithProp[];
   chapterTitle: string;
 }
+
 const ClientPage = ({ chapterId, hadiths, chapterTitle }: ClientPageProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
   const [hadithsStore, setHadithsStore] = useState<HadithProp[]>(hadiths);
   const { ref, inView } = useInView();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchedHadiths, setSearchedHadiths] = useState<HadithProp[] | null>(
+    null
+  );
+
+  const handleSearchChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value.toLowerCase();
+    setSearchQuery(query);
+    if (query) {
+      const hadiths = await fetchHadithBySearch(query);
+      setSearchedHadiths(hadiths);
+    } else {
+      setSearchedHadiths(null);
+    }
+  };
+
   const loadMore = () => {
     try {
       if (isLoading || !hasMore) return;
@@ -33,19 +56,10 @@ const ClientPage = ({ chapterId, hadiths, chapterTitle }: ClientPageProps) => {
           return;
         }
 
-        setHadithsStore((prev) => [...prev, ...hadiths]);
+        setHadithsStore((prev) => [...prev, ...hadithsCollection]);
         setPage(nextPage);
         setIsLoading(false);
       });
-      // const { hadiths } = data;
-      // if (hadiths.length === 0) {
-      //   setHasMore(false);
-      //   setIsLoading(false);
-      //   return;
-      // }
-      // setHadithsStore((prev) => [...prev, ...hadiths]);
-      // setPage(nextPage);
-      // setIsLoading(false);
     } catch (e) {
       console.log("Failed to load more hadiths", e);
       setIsLoading(false);
@@ -54,8 +68,9 @@ const ClientPage = ({ chapterId, hadiths, chapterTitle }: ClientPageProps) => {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
-    if (inView || !hasMore) {
+    if (inView && hasMore) {
       loadMore();
     }
   }, [inView, hasMore]);
@@ -63,15 +78,20 @@ const ClientPage = ({ chapterId, hadiths, chapterTitle }: ClientPageProps) => {
   return (
     <div>
       <MediumHeading>{chapterTitle}</MediumHeading>
+      <div className="mt-10 flex justify-end">
+        <div className="flex space-x-2">
+          <Input onChange={handleSearchChange} placeholder="search hadiths" />
+        </div>
+      </div>
       <div className="mt-10 grid lg:grid-cols-2 gap-2">
-        {hadithsStore.map((hadith, index) => (
+        {(searchedHadiths || hadithsStore).map((hadith, index) => (
           <div
             key={hadith.Hadith_ID + index}
             className="card bg-base-100 shadow-xl"
           >
             <div className="card-body">
               <h2 className="card-title">{hadith.En_Sanad}</h2>
-              <p className=" line-clamp-3 my-5">{hadith.En_Text}</p>
+              <p className="line-clamp-3 my-5">{hadith.En_Text}</p>
               <div className="card-actions justify-end">
                 <Link
                   href={
@@ -88,7 +108,7 @@ const ClientPage = ({ chapterId, hadiths, chapterTitle }: ClientPageProps) => {
           </div>
         ))}
       </div>
-      {hasMore && (
+      {hasMore && !searchedHadiths && (
         <div className="flex justify-center my-10">
           <span ref={ref} className="loading loading-ring loading-lg"></span>
         </div>

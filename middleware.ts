@@ -10,7 +10,10 @@ export default authMiddleware({
     "/hadiths/chapters/(.*)",
     "/hadiths/chapters/(.*)/details/(.*)",
     "/dashboard",
+    "/api/posts",
+    "/api/hello",
   ],
+  // ignoredRoutes: ["/((?!api|trpc))(_next.*|.+.[w]+$)", "/posts"],
 });
 
 export const config = {

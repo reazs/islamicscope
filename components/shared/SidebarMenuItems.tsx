@@ -6,7 +6,7 @@ import { SignedIn } from "@clerk/nextjs";
 import { cn } from "@/lib/utils";
 import { usePathname, useRouter } from "next/navigation";
 import { menuItemsSidebar, quranChapters } from "@/constant";
-import { CirclePlus, Pen, Plus, Save } from "lucide-react";
+import { CirclePlus, Pen, Plus, Save, User } from "lucide-react";
 
 const SidebarMenuItems = () => {
   const currentPath = usePathname();
@@ -41,9 +41,15 @@ const SidebarMenuItems = () => {
           </a>
         </li>
         <li>
-          <a>
-            <CirclePlus />
+          <a href="/create-post">
+            <Plus />
             Create Post
+          </a>
+        </li>
+        <li>
+          <a href="/profile">
+            <User />
+            Profile
           </a>
         </li>
       </SignedIn>

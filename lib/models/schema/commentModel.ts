@@ -12,6 +12,7 @@ export const commentSchema = new Schema({
     },
   ],
   createdAt: { type: Date, default: Date.now },
+  edited: { type: Date, default: null }, // Add edited field
 });
 
 // Define the TypeScript interface for the Comment model
@@ -24,6 +25,7 @@ export interface CommentDocument extends Document {
     createdAt: Date;
   }[];
   createdAt: Date;
+  edited: Date | null; // Include edited field in the interface
 }
 
 // Function to get or create the Comment model

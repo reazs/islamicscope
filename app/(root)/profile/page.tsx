@@ -1,20 +1,55 @@
 "use client";
+import { useEffect, useState } from "react";
+import { getUpdatedUserProfileImage } from "@/app/api/user/route";
 import ThreadCardTile from "@/components/CardTile/ThreadCardTile";
 import UserProfileCard from "@/components/CardTile/UserProfileCard";
 import Loading from "@/components/shared/Loading";
-import { useUserProfile } from "@/contexts/UserContext";
-import { useThreads } from "@/hooks/useThreads";
+import { useGetCurrentUserProfile, useThreads } from "@/hooks/useThreads";
+import { useUser } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const Page = () => {
-  const { userProfile } = useUserProfile();
+  const { user } = useUser();
+  const [profileImageUpdated, setProfileImageUpdated] = useState(false);
+  const router = useRouter();
+  const {
+    data: userInfo,
+    isLoading: isLoadingProf,
+    isError: isErrorProf,
+  } = useGetCurrentUserProfile();
 
-  if (!userProfile) {
-    return <Loading />;
+  const {
+    data: threads,
+    isLoading: isThreadsLoading,
+    isError: isErrorThreads,
+  } = useThreads();
+
+  useEffect(() => {
+    if (
+      userInfo?.imageUrl &&
+      user?.imageUrl &&
+      userInfo.imageUrl !== user.imageUrl
+    ) {
+      const updateProfileImage = async () => {
+        try {
+          console.log("Updating profile image...");
+          await getUpdatedUserProfileImage();
+          setProfileImageUpdated(true);
+        } catch (error) {
+          console.error("Failed to update profile image", error);
+        }
+      };
+      updateProfileImage();
+    }
+  }, [userInfo, user]);
+
+  if (profileImageUpdated) {
+    window.location.reload();
   }
-  const { data: threads, isLoading, isError, error } = useThreads();
-  if (isLoading) {
+
+  if (isThreadsLoading || isLoadingProf) {
     return (
       <div className="mt-10">
         <UserProfileCard />
@@ -23,8 +58,7 @@ const Page = () => {
     );
   }
 
-  if (isError) {
-    console.log(error);
+  if (isErrorThreads || isErrorProf) {
     return (
       <div className="mt-10">
         <UserProfileCard />
@@ -32,11 +66,15 @@ const Page = () => {
       </div>
     );
   }
-  if (!threads) {
+
+  if (!threads || !userInfo) {
     return <Loading />;
   }
+  if (!isLoadingProf && !userInfo) {
+    return router.push("/onboarding");
+  }
   const currentUserThreads = threads.filter(
-    (thread) => thread.user.email === userProfile.email
+    (thread) => thread.user.email === userInfo.email
   );
 
   return (
@@ -46,7 +84,7 @@ const Page = () => {
         Posts
       </h3>
       {currentUserThreads.length > 0 ? (
-        currentUserThreads.map((thread, index) => (
+        currentUserThreads.map((thread) => (
           <ThreadCardTile key={thread._id} {...thread} />
         ))
       ) : (

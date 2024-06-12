@@ -33,3 +33,22 @@ export const formatTimestamp = (timestamp: string): string => {
 
   return `${timeStr} - ${dateStr}`;
 };
+
+export const formatRelativeTime = (timestamp: string): string => {
+  const date = new Date(timestamp);
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+
+  const minutes = Math.floor(diff / 60000);
+  const hours = Math.floor(diff / 3600000);
+  const days = Math.floor(diff / 86400000);
+  const months = Math.floor(diff / 2592000000);
+  const years = Math.floor(diff / 31536000000);
+
+  if (years > 0) return `${years}y`;
+  if (months > 0) return `${months}mo`;
+  if (days > 0) return `${days}d`;
+  if (hours > 0) return `${hours}h`;
+  if (minutes > 0) return `${minutes}m`;
+  return "1m";
+};

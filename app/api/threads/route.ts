@@ -8,6 +8,14 @@ export const GET = async () => {
 
   try {
     const threads = await ThreadModel.find()
+      .populate({
+        path: "comments",
+        options: { sort: { creationDate:   -1 } }, // Sort comments by createdAt descending
+        populate: {
+          path: "user",
+          model: "User",
+        },
+      })
       .populate("user")
       .sort({ createdAt: -1 })
       .exec();

@@ -27,7 +27,6 @@ export type IUser = {
   username: string;
   email: string;
   imageUrl: string;
-  bio: string;
 };
 export type INewUser = {
   id: string;
@@ -51,5 +50,14 @@ export type IThread = {
   content: string;
   createdAt: string;
   likes?: IUser[];
-  comments?: [];
+  comments?: IComment[];
+};
+
+export type IComment = {
+  _id: string;
+  text: string;
+  user: IUser;
+  createdAt: string;
+  replies: [];
+  edited: string;
 };

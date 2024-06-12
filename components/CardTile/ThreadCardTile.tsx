@@ -10,7 +10,7 @@ import {
   Trash,
 } from "lucide-react";
 import Image from "next/image";
-import { IThread } from "@/types";
+import { IComment, IThread } from "@/types";
 import { useUserProfile } from "@/contexts/UserContext";
 import Loading from "../shared/Loading";
 import { useDeleteThread, useAddThreadComment } from "@/hooks/useThreads";
@@ -26,6 +26,14 @@ import { Separator } from "../ui/separator";
 import CommentCardTile from "./CommentCardTile";
 import Link from "next/link";
 import { Button } from "../ui/button";
+import {
+  DialogContent,
+  Dialog,
+  DialogTrigger,
+  DialogHeader,
+  DialogFooter,
+} from "../ui/dialog";
+import ThreadCommentInput from "./ThreadCommentInput";
 const ThreadCardTile = ({
   title,
   content,
@@ -38,9 +46,8 @@ const ThreadCardTile = ({
   const [isCurrentUser, setIsCurrentUser] = useState(false);
   const [createdTime, setCreatedTime] = useState("");
   const { mutateAsync: deleteThread, isPending: isLoading } = useDeleteThread();
-  const [comment, setComment] = useState("");
-  const { mutateAsync: addThreadComment, isPending: addingThreadComment } =
-    useAddThreadComment();
+  const [dialogOpen, setDialogOpen] = useState(false);
+
   useEffect(() => {
     if (userProfile && userProfile.email === user.email) {
       setIsCurrentUser(true);
@@ -54,16 +61,9 @@ const ThreadCardTile = ({
   }
   const handleClick = async (id: string) => {
     await deleteThread(id);
-  };
-  const handleCommentChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setComment(value);
+    setDialogOpen(false);
   };
 
-  const handleCommentSend = async () => {
-    addThreadComment({ comment: comment, threadId: _id });
-    setComment("");
-  };
   return (
     <Collapsible>
       <div className="max-w-screen-lg shadow-lg p-5 rounded-md bg-white mx-auto my-5">
@@ -92,7 +92,7 @@ const ThreadCardTile = ({
                     {content}
                   </p>
                   <Button className="p-0" variant={"link"}>
-                    <Link href={""}>View Details</Link>
+                    <Link href={"/post/" + _id}>View Details</Link>
                   </Button>
                 </div>
 
@@ -109,10 +109,41 @@ const ThreadCardTile = ({
                         {isLoading ? (
                           <Loading />
                         ) : (
-                          <Trash
-                            className={cn(" cursor-pointer")}
-                            onClick={() => handleClick(_id)}
-                          />
+                          <Dialog
+                            open={dialogOpen}
+                            onOpenChange={setDialogOpen}
+                          >
+                            <DialogTrigger>
+                              <Trash className={cn(" cursor-pointer")} />
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader className="text-red-500">
+                                Are you sure you want to delete this post?
+                              </DialogHeader>
+
+                              <Label>{title}</Label>
+                              <p className="  leading-7 text-gray-600 [&:not(:first-child)]:mt-1 md:line-clamp line-clamp-5 md:text-base text-sm">
+                                {content}
+                              </p>
+
+                              <DialogFooter>
+                                <div
+                                  onClick={() => {
+                                    setDialogOpen(false);
+                                  }}
+                                  className="btn btn-outline"
+                                >
+                                  Cancel
+                                </div>
+                                <div
+                                  onClick={() => handleClick(_id)}
+                                  className="btn btn-outline btn-error "
+                                >
+                                  DELETE
+                                </div>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
                         )}
                       </>
                     )}
@@ -127,37 +158,8 @@ const ThreadCardTile = ({
 
       <CollapsibleContent className="">
         {/* */}
-
-        <div className=" max-w-screen-lg shadow-lg p-5 rounded-md bg-white mx-auto my-5 space-y-5">
-          <Label className="text-2xl font-bold text-muted-foreground">
-            Comments
-          </Label>
-          <div className="flex items-center space-x-3">
-            <Input
-              value={comment}
-              onChange={(e) => handleCommentChange(e)}
-              placeholder="Share you're thoughts..."
-            />
-            <div
-              onClick={() => handleCommentSend()}
-              className="btn btn-outline rounded-sm hover:text-white"
-            >
-              <Send />{" "}
-            </div>
-          </div>
-
-          <Separator />
-          {/* show 5 recent comments */}
-          <div>
-            {comments &&
-              comments.map((comment, index) => (
-                <CommentCardTile key={index} comment={comment} threadId={_id} />
-              ))}
-
-            <p className="text-zinc-400 hover:text-primary text-end hover:underline cursor-pointer">
-              Load more comments
-            </p>
-          </div>
+        <div className="max-w-screen-lg shadow-lg p-5 rounded-md bg-white mx-auto my-5 space-y-5">
+          <ThreadCommentInput comments={comments as IComment[]} _id={_id} />
         </div>
       </CollapsibleContent>
     </Collapsible>

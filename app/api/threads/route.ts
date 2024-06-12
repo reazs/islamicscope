@@ -10,7 +10,7 @@ export const GET = async () => {
     const threads = await ThreadModel.find()
       .populate({
         path: "comments",
-        options: { sort: { creationDate:   -1 } }, // Sort comments by createdAt descending
+        options: { sort: { creationDate: -1 } }, // Sort comments by createdAt descending
         populate: {
           path: "user",
           model: "User",

@@ -111,8 +111,6 @@ export const DELETE = async (req: NextRequest, res: NextResponse) => {
     const newThreadComs = thread.comments.filter(
       (comment) => comment._id != commentId
     );
-    console.log(newThreadComs);
-    console.log(commentId, "commentId");
     thread.comments = newThreadComs;
     await thread.save(); // Use await to ensure save completes
 

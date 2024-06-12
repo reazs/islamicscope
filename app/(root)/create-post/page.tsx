@@ -1,8 +1,8 @@
 "use client";
+import CreatePostForm from "@/components/forms/CreatePostForm";
 import Loading from "@/components/shared/Loading";
+import MediumHeading from "@/components/shared/MediumHeading";
 import { useUserProfile } from "@/contexts/UserContext";
-import { useCreateThread } from "@/hooks/useThreads";
-import { delay } from "@/lib/utils";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -25,49 +25,32 @@ const Page = () => {
     checkUserProfile();
   }, [userProfile, router]);
 
-  const { mutateAsync: createThread, isPending: isLoadingCreate } =
-    useCreateThread();
-  const [error, setError] = useState<string | null>(null);
-
   if (!isSignedIn || !user) {
     return <Loading />;
   }
-  const email = user.primaryEmailAddress?.emailAddress;
 
-  const handleClick = async () => {
-    setError(null);
-    try {
-      const newThread = await createThread({
-        email: email as string,
-        title: "Next js 13 to 14 huge update",
-        content:
-          "Switching to Next.js has significantly improved our website's performance and SEO. The hybrid capabilities of server-side rendering and static generation allow us to optimize content delivery for different pages effectively. Additionally, the seamless integration with React and rich plugin ecosystem make Next.js a versatile framework for any modern web project.",
-      });
-      if (newThread?.status === 200) {
-        router.push("/profile");
-      }
-      //   const body = await newThread?.json();
-    } catch (err) {
-      setError("Failed to create post");
-      console.error(err);
-    }
-  };
   if (userLoading) {
     return <Loading />; // Show a loading spinner or message while loading
   }
+
   return (
-    <div>
-      {isLoadingCreate ? (
-        <Loading />
-      ) : (
-        <>
-          <button className="btn btn-outline" onClick={handleClick}>
+    <div className="flex h-[90vh] items-center justify-center">
+      <>
+        {/* <button className="btn btn-outline" onClick={handleClick}>
             Create Post
           </button>
           <p>Email: {email}</p>
-          {error && <p className="text-red-500">{error}</p>}
-        </>
-      )}
+          {error && <p className="text-red-500">{error}</p>} */}
+      </>
+
+      <div className=" max-w-screen-lg mx-auto  ">
+        <MediumHeading>Create Post</MediumHeading>
+        <p className="text-center text-zinc-400">
+          Express yourself and inspire others with your unique perspective!
+        </p>
+
+        <CreatePostForm />
+      </div>
     </div>
   );
 };

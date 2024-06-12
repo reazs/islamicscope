@@ -39,7 +39,7 @@ const CommentCardTile = ({
     deleteThreadComment({ commentId: comment._id, threadId: threadId });
   };
   const [commentEdit, setCommentEdit] = useState(comment.text);
-
+  const [isDialogOpen, setDialogOpen] = useState(false);
   const handleChangeComment = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setCommentEdit(value);
@@ -50,6 +50,7 @@ const CommentCardTile = ({
       commentId: comment._id,
       newComment: commentEdit,
     });
+    setDialogOpen(false);
   };
   return (
     <div className="border-b my-3">
@@ -74,7 +75,7 @@ const CommentCardTile = ({
             <p className="">
               {comment.text}{" "}
               {comment.edited && (
-                <span className="text-zinc-400">{"(Edited)"}</span>
+                <span className="text-zinc-400 text-xs">{"(Edited)"}</span>
               )}
             </p>
           </div>
@@ -86,7 +87,7 @@ const CommentCardTile = ({
               onClick={() => handleDelete()}
               className={cn(" cursor-pointer hover:text-destructive")}
             />
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
               <DialogTrigger asChild>
                 <Pen className=" cursor-pointer hover:text-primary" />
               </DialogTrigger>

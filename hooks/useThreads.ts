@@ -1,3 +1,4 @@
+import { getThreadById } from "@/app/api/threads/[id]/route";
 import {
   addThreadComment,
   deleteThreadComment,
@@ -84,6 +85,9 @@ export const useAddThreadComment = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_RECENT_THREADS],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_THREAD_BY_ID],
+      });
     },
   });
 };
@@ -102,6 +106,9 @@ export const useDeleteThreadComment = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_RECENT_THREADS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_THREAD_BY_ID],
       });
     },
   });
@@ -129,6 +136,18 @@ export const useUpdateThreadComment = () => {
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.GET_RECENT_THREADS],
       });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_THREAD_BY_ID],
+      });
     },
+  });
+};
+
+// get thread by id
+
+export const useGetThreadById = (threadId: string) => {
+  return useQuery<IThread, Error>({
+    queryKey: [QUERY_KEYS.GET_THREAD_BY_ID],
+    queryFn: () => getThreadById(threadId),
   });
 };

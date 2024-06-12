@@ -1,5 +1,5 @@
 "use client";
-import React, { ReactEventHandler } from "react";
+import React, { ReactEventHandler, useEffect, useState } from "react";
 
 import { ISurahs } from "@/types";
 import { SignedIn } from "@clerk/nextjs";
@@ -10,7 +10,15 @@ import { CirclePlus, Pen, Plus, Save, User } from "lucide-react";
 
 const SidebarMenuItems = () => {
   const currentPath = usePathname();
+  const [isClient, setIsClient] = useState(false);
 
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    return null; // Or a loading state
+  }
   return (
     <ul className="menu  w-64 rounded-box gap-2">
       {menuItemsSidebar.map((menu) => {
@@ -58,35 +66,3 @@ const SidebarMenuItems = () => {
 };
 
 export default SidebarMenuItems;
-
-// think is not a good idea
-{
-  /* menu.herf === "/al-quran" ? (
-            <li>
-              <details open>
-                <summary
-                  onClick={(e) => handleClick(e as any)}
-                  className={cn(
-                    currentPath === "/al-quran" &&
-                      "bg-primary-content text-neutral-content hover:text-primary"
-                  )}
-                >
-                  Al Quran
-                </summary>
-                <ul>
-                  <li>
-                    <details>
-                      <summary>Chapters</summary>
-                      <ul>
-                        {quranChapters.map((chapter) => (
-                          <li>
-                            <a>{chapter.englishName}</a>
-                          </li>
-                        ))}
-                      </ul>
-                    </details>
-                  </li>
-                </ul>
-              </details>
-            </li> */
-}

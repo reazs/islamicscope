@@ -6,7 +6,7 @@ import UserIfnoCard from "./UserIfnoCard";
 import SidebarMenuItems from "./SidebarMenuItems";
 const Sidebar = () => {
   return (
-    <div className="md:flex overflow-y-auto   fixed light:bg-base-200  z-40 flex-col justify-between items-center hidden border-r border-zinc-400  h-full">
+    <div className="md:flex overflow-y-auto  fixed light:bg-base-200  z-40 flex-col justify-between items-center hidden border-r border-zinc-400  h-full">
       <div className="mt-10 ">
         <div>
           <BrandName />

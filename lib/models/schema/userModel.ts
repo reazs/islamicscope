@@ -6,6 +6,7 @@ export interface UserDocument extends Document {
   email: string;
   imageUrl: string;
   onboarding: boolean;
+  hadiths?: number[];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -16,6 +17,7 @@ const userSchema = new Schema<UserDocument>(
     username: { type: String, required: true },
     email: { type: String, required: true },
     imageUrl: { type: String, required: true },
+    hadiths: [{ type: Number }],
     onboarding: { type: Boolean, default: false },
   },
   { timestamps: true }

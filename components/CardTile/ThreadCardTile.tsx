@@ -1,39 +1,12 @@
-"use client";
-import React, { ChangeEvent, EventHandler, useEffect, useState } from "react";
-import {
-  Delete,
-  Heart,
-  MessageCircleMore,
-  Reply,
-  Send,
-  Share2Icon,
-  Trash,
-} from "lucide-react";
 import Image from "next/image";
 import { IComment, IThread } from "@/types";
-import { useUserProfile } from "@/contexts/UserContext";
-import Loading from "../shared/Loading";
-import { useDeleteThread, useAddThreadComment } from "@/hooks/useThreads";
-import { cn, formatTimestamp } from "@/lib/utils";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@radix-ui/react-collapsible";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Separator } from "../ui/separator";
-import CommentCardTile from "./CommentCardTile";
+import { formatTimestamp } from "@/lib/utils";
+import { Collapsible, CollapsibleContent } from "@radix-ui/react-collapsible";
 import Link from "next/link";
 import { Button } from "../ui/button";
-import {
-  DialogContent,
-  Dialog,
-  DialogTrigger,
-  DialogHeader,
-  DialogFooter,
-} from "../ui/dialog";
+
 import ThreadCommentInput from "./ThreadCommentInput";
+import ThreadStats from "./ThreadStats";
 const ThreadCardTile = ({
   title,
   content,
@@ -41,29 +14,8 @@ const ThreadCardTile = ({
   _id,
   createdAt,
   comments,
+  likes
 }: IThread) => {
-  const { userProfile } = useUserProfile();
-  const [isCurrentUser, setIsCurrentUser] = useState(false);
-  const [createdTime, setCreatedTime] = useState("");
-  const { mutateAsync: deleteThread, isPending: isLoading } = useDeleteThread();
-  const [dialogOpen, setDialogOpen] = useState(false);
-
-  useEffect(() => {
-    if (userProfile && userProfile.email === user.email) {
-      setIsCurrentUser(true);
-    }
-    const formatedTime = formatTimestamp(createdAt);
-    setCreatedTime(formatedTime);
-  }, [userProfile, user.email, createdTime]);
-
-  if (!userProfile) {
-    return <Loading />;
-  }
-  const handleClick = async (id: string) => {
-    await deleteThread(id);
-    setDialogOpen(false);
-  };
-
   return (
     <Collapsible>
       <div className="max-w-screen-lg shadow-lg p-5 rounded-md bg-white mx-auto my-5">
@@ -97,63 +49,19 @@ const ThreadCardTile = ({
                 </div>
 
                 {/* threads stats */}
-                <div className="flex my-4 justify-between items-center">
-                  <div className="flex space-x-4">
-                    <Heart className=" text-rose-500" />{" "}
-                    <CollapsibleTrigger>
-                      <MessageCircleMore />{" "}
-                    </CollapsibleTrigger>
-                    <Share2Icon className=" text-blue-400" />
-                    {isCurrentUser && (
-                      <>
-                        {isLoading ? (
-                          <Loading />
-                        ) : (
-                          <Dialog
-                            open={dialogOpen}
-                            onOpenChange={setDialogOpen}
-                          >
-                            <DialogTrigger>
-                              <Trash className={cn(" cursor-pointer")} />
-                            </DialogTrigger>
-                            <DialogContent>
-                              <DialogHeader className="text-red-500">
-                                Are you sure you want to delete this post?
-                              </DialogHeader>
-
-                              <Label>{title}</Label>
-                              <p className="  leading-7 text-gray-600 [&:not(:first-child)]:mt-1 md:line-clamp line-clamp-5 md:text-base text-sm">
-                                {content}
-                              </p>
-
-                              <DialogFooter>
-                                <div
-                                  onClick={() => {
-                                    setDialogOpen(false);
-                                  }}
-                                  className="btn btn-outline"
-                                >
-                                  Cancel
-                                </div>
-                                <div
-                                  onClick={() => handleClick(_id)}
-                                  className="btn btn-outline btn-error "
-                                >
-                                  DELETE
-                                </div>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
-                        )}
-                      </>
-                    )}
-                  </div>
-                </div>
+                <ThreadStats
+                  title={title}
+                  content={content}
+                  _id={_id}
+                  user={user}
+                  comments={comments as IComment[]}
+                  likes={likes}
+                />
               </div>
             </div>
           </div>
         </div>
-        <p className="text-sm text-gray-500">{createdTime}</p>
+        <p className="text-sm text-gray-500">{formatTimestamp(createdAt)}</p>
       </div>
 
       <CollapsibleContent className="">

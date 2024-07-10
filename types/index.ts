@@ -27,6 +27,7 @@ export type IUser = {
   username: string;
   email: string;
   imageUrl: string;
+  hadiths?: number[];
 };
 export type INewUser = {
   id: string;

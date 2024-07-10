@@ -2,7 +2,7 @@ import { Settings, BookCopy, Book, Users, Search } from "lucide-react";
 import prayerIcon from "@/assets/icons/islam-prayer-icon.png";
 import DashboardLinkCard from "./DashboardLinkCardProps";
 import Image from "next/image";
-const page = async () => {
+const page = () => {
   const tools = [
     {
       label: "Al Quran",
@@ -52,22 +52,6 @@ const page = async () => {
     },
   ];
 
-  // const loadData = async () => {
-  //   const res = await fetch("/api/posts", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       username: "reazrizz",
-  //       email: "reaz@gmail.com",
-  //       title: "The First Game of Email",
-  //       message: "This works prefectly. I think that we can do better.",
-  //     }),
-  //   });
-  //   console.log(res);
-  // };
-  // await loadData();
   return (
     <div className="flex flex-col items-center justify-center h-screen">
       <div className="pb-10">

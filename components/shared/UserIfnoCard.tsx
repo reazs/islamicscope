@@ -1,23 +1,33 @@
 "use client";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { useUserProfile } from "@/contexts/UserContext";
+import { UserButton } from "@clerk/nextjs";
 
 import React from "react";
 
 const UserIfnoCard = () => {
-  const { user } = useUser();
-  if (!user) {
-    return;
+  const { userProfile } = useUserProfile();
+  if (!userProfile) {
+    return (
+      <div className="flex justify-between items-center mt-5">
+        <div className="w-[40px] h-[40px] flex items-center">
+          <div className="w-[40px] h-[40px] bg-gray-300 rounded-full animate-pulse"></div>
+        </div>
+        <div className="flex flex-col space-y-1">
+          <div className="w-24 h-4 bg-gray-300 rounded animate-pulse"></div>
+          <div className="w-32 h-4 bg-gray-300 rounded animate-pulse"></div>
+        </div>
+      </div>
+    );
   }
-  console.log(user);
   return (
     <div className="flex  justify-between items-center mt-5">
       <div className="w-[40px] h-[40px] flex items-center">
         <UserButton />
       </div>
       <div>
-        <h1 className="text-xs text-foreground">{user.username + ""}</h1>
+        <h1 className="text-xs text-foreground">{userProfile.username + ""}</h1>
         <p className="text-xs text-muted-foreground">
-          {user.emailAddresses + ""}
+          {userProfile.email + ""}
         </p>
       </div>
     </div>

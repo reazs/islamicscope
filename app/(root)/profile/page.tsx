@@ -5,14 +5,20 @@ import ThreadCardTile from "@/components/CardTile/ThreadCardTile";
 import UserProfileCard from "@/components/CardTile/UserProfileCard";
 import Loading from "@/components/shared/Loading";
 import { useGetCurrentUserProfile, useThreads } from "@/hooks/useThreads";
-import { useUser } from "@clerk/nextjs";
+import { UserProfile, useUser } from "@clerk/nextjs";
 import { Plus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import ProfileSkeleton from "./ProfileSkeleton";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import PostsTab from "./PostsTab";
+import SavedTab from "./SavedTab";
+import { useUserProfile } from "@/contexts/UserContext";
 
 const Page = () => {
   const { user } = useUser();
   const [profileImageUpdated, setProfileImageUpdated] = useState(false);
+  const { userProfile } = useUserProfile();
   const router = useRouter();
   const {
     data: userInfo,
@@ -50,12 +56,7 @@ const Page = () => {
   }
 
   if (isThreadsLoading || isLoadingProf) {
-    return (
-      <div className="mt-10">
-        <UserProfileCard />
-        <Loading />
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   if (isErrorThreads || isErrorProf) {
@@ -80,26 +81,23 @@ const Page = () => {
   return (
     <div className="mt-10">
       <UserProfileCard />
-      <h3 className="text-2xl text-zinc-400 font-bold font-josefin-sans my-5">
-        Posts
-      </h3>
-      {currentUserThreads.length > 0 ? (
-        currentUserThreads.map((thread) => (
-          <ThreadCardTile key={thread._id} {...thread} />
-        ))
-      ) : (
-        <div className="h-[400px] flex justify-center items-center">
-          <div className="flex flex-col items-center">
-            <p className="text-sm text-muted-foreground">
-              Looks like you haven't posted anything yet. Why not share your
-              thoughts?
-            </p>
-            <Link className="flex btn btn-outline mt-10" href={"/create-post"}>
-              <Plus /> <p> Create Post</p>
-            </Link>
-          </div>
-        </div>
-      )}
+      <Tabs defaultValue="posts" className="w-full mt-5">
+        <TabsList>
+          <TabsTrigger value="posts">Posts</TabsTrigger>
+          <TabsTrigger value="saved">Saved</TabsTrigger>
+          <TabsTrigger value="likes">Likes</TabsTrigger>
+        </TabsList>
+        <TabsContent value="posts">
+          <PostsTab
+            threads={currentUserThreads}
+            threadsLength={currentUserThreads.length}
+          />
+        </TabsContent>
+        <TabsContent value="saved">
+          <SavedTab hadithsId={userProfile?.hadiths as []} />
+        </TabsContent>
+        <TabsContent value="password">Change your password here.</TabsContent>
+      </Tabs>
     </div>
   );
 };

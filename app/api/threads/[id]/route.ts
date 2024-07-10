@@ -25,6 +25,10 @@ export async function GET(req: NextRequest) {
           model: "User",
         },
       })
+      .populate({
+        path: "likes", // Populate the 'likes' field
+        model: "User", // Populate with User model
+      })
       .populate("user");
     if (!thread) {
       return NextResponse.json(
@@ -47,15 +51,17 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export const getThreadById = async (threadId: string): Promise<IThread> => {
+export const getThreadById = async (
+  threadId: string
+): Promise<IThread | null> => {
   try {
     const response = await fetch("/api/threads/" + threadId, {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     });
-    if (!response) {
-      console.log("Failed to fetch the thread bad response");
-      throw new Error("Bad response for thread by id");
+
+    if (!response.ok) {
+      return null;
     }
     const body = await response.json();
     return body;

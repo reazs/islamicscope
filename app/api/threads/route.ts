@@ -10,16 +10,19 @@ export const GET = async () => {
     const threads = await ThreadModel.find()
       .populate({
         path: "comments",
-        options: { sort: { creationDate: -1 } }, // Sort comments by createdAt descending
+        options: { sort: { createdAt: -1 } }, // Sort comments by createdAt descending
         populate: {
           path: "user",
           model: "User",
         },
       })
+      .populate({
+        path: "likes", // Populate the 'likes' field
+        model: "User", // Populate with User model
+      })
       .populate("user")
-      .sort({ createdAt: -1 })
+      .sort({ createdAt: -1 }) // Sort threads by createdAt descending
       .exec();
-
     if (!threads)
       return NextResponse.json({ error: "threads not found" }, { status: 404 });
     return NextResponse.json(threads, { status: 200 });

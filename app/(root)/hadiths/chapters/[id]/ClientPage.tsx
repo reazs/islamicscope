@@ -1,4 +1,5 @@
 "use client";
+import HadithStats from "@/components/shared/HadithStats";
 import MediumHeading from "@/components/shared/MediumHeading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -91,6 +92,12 @@ const ClientPage = ({ chapterId, hadiths, chapterTitle }: ClientPageProps) => {
           >
             <div className="card-body">
               <h2 className="card-title">{hadith.En_Sanad}</h2>
+
+              {/* hadiths stats */}
+              <HadithStats
+                hadithId={hadith.Hadith_ID}
+                hadithChapterId={hadith.Chapter_ID}
+              />
               <p className="line-clamp-3 my-5">{hadith.En_Text}</p>
               <div className="card-actions justify-end">
                 <Link

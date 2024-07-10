@@ -2,6 +2,7 @@ import PreviusPage from "@/components/shared/PreviusPage";
 import { fetchHadithById } from "@/lib/actions/actionHadiths";
 import NextHadith from "./NextHadith";
 import PrevHadith from "./PrevHadith";
+import HadithStats from "@/components/shared/HadithStats";
 const page = async ({ params }: { params: { detailsId: string } }) => {
   const data = await fetchHadithById(params.detailsId);
   if (!data) return;
@@ -14,6 +15,7 @@ const page = async ({ params }: { params: { detailsId: string } }) => {
         <div className="max-w-screen-lg">
           <h2 className="mt-10 scroll-m-20 border-b pb-2 md:text-3xl text-2xl font-semibold tracking-tight transition-colors first:mt-0 mb-10 ">
             {hadith.En_Sanad}
+            <HadithStats hadithId={hadith.Chapter_ID} />
           </h2>
           <p className="leading-7 [&:not(:first-child)]:mt-6">
             {hadith.En_Text}

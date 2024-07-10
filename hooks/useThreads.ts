@@ -4,6 +4,8 @@ import {
   deleteThreadComment,
   updateThreadComment,
 } from "@/app/api/threads/comment/route";
+import { IEditThreadById, editThreadById } from "@/app/api/threads/edit/route";
+import { updateThreadsLikes } from "@/app/api/threads/like/route";
 import {
   createThread,
   deleteThread,
@@ -146,8 +148,49 @@ export const useUpdateThreadComment = () => {
 // get thread by id
 
 export const useGetThreadById = (threadId: string) => {
-  return useQuery<IThread, Error>({
+  return useQuery<IThread | null, Error>({
     queryKey: [QUERY_KEYS.GET_THREAD_BY_ID],
     queryFn: () => getThreadById(threadId),
+  });
+};
+
+// update thread likes
+export const useUpdateThreadLike = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      threadId,
+      userEmail,
+    }: {
+      threadId: string;
+      userEmail: string;
+    }) => updateThreadsLikes({ threadId, userEmail }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_THREADS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_THREAD_BY_ID],
+      });
+    },
+  });
+};
+
+// editing thread
+
+export const useEditThreadById = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ title, content, threadId }: IEditThreadById) =>
+      editThreadById({ title, content, threadId }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_RECENT_THREADS],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.GET_THREAD_BY_ID],
+      });
+    },
   });
 };
